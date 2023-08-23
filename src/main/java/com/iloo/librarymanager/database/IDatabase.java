@@ -2,6 +2,9 @@ package com.iloo.librarymanager.database;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 /**
  * The generic database interface for managing objects of a specific type.
@@ -45,4 +48,28 @@ public interface IDatabase<T> {
 	 * @param id The unique identifier of the object to delete.
 	 */
 	void delete(int id);
+
+	/**
+	 * Applies the given action to each element in the database.
+	 *
+	 * @param action The action to be applied to each element.
+	 */
+	void forEach(Consumer<T> action);
+
+	/**
+	 * Creates and returns an instance of type T using the provided supplier.
+	 *
+	 * @param supplier The supplier that provides an instance of type T.
+	 * @return An instance of type T created by the supplier.
+	 */
+	T create(Supplier<T> supplier);
+
+	/**
+	 * Filters the elements in the database based on the given predicate and returns
+	 * a list of elements that satisfy the predicate.
+	 *
+	 * @param predicate The predicate used for filtering elements.
+	 * @return A list of elements that satisfy the predicate.
+	 */
+	List<T> filter(Predicate<T> predicate);
 }

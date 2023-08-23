@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.iloo.librarymanager.exception.BookException;
 import com.iloo.librarymanager.model.Book;
@@ -59,6 +62,29 @@ class BookDatabase implements IDatabase<Book> {
 		if (!updatedBooks.removeIf(book -> book.getId() == bookId)) {
 			throw new BookException("Book with the specified ID not found.");
 		}
+	}
+
+	@Override
+	public void forEach(Consumer<Book> action) {
+		List<Book> items = getAll();
+		items.forEach(action);
+	}
+
+	@Override
+	public Book create(Supplier<Book> supplier) {
+		return supplier.get();
+	}
+
+	@Override
+	public List<Book> filter(Predicate<Book> predicate) {
+		List<Book> items = getAll();
+		List<Book> filteredItems = new ArrayList<>();
+		for (Book item : items) {
+			if (predicate.test(item)) {
+				filteredItems.add(item);
+			}
+		}
+		return filteredItems;
 	}
 
 }

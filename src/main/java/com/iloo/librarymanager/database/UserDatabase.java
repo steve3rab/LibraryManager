@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import com.iloo.librarymanager.exception.UserException;
 import com.iloo.librarymanager.model.User;
@@ -60,6 +63,29 @@ class UserDatabase implements IDatabase<User> {
 		if (!updatedUsers.removeIf(user -> user.getId() == id)) {
 			throw new UserException("User with the specified ID not found.");
 		}
+	}
+
+	@Override
+	public void forEach(Consumer<User> action) {
+		List<User> items = getAll();
+		items.forEach(action);
+	}
+
+	@Override
+	public User create(Supplier<User> supplier) {
+		return supplier.get();
+	}
+
+	@Override
+	public List<User> filter(Predicate<User> predicate) {
+		List<User> items = getAll();
+		List<User> filteredItems = new ArrayList<>();
+		for (User item : items) {
+			if (predicate.test(item)) {
+				filteredItems.add(item);
+			}
+		}
+		return filteredItems;
 	}
 
 }
