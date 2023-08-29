@@ -23,20 +23,30 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      - name: Step 3 - Run unit tests for libraryManager
+      - name: Step 3 - Run unit tests
         working-directory: .
         run: |
           echo "Loading... Running unit tests for libraryManager"
           mvn clean verify -Dtest=*IT
+          
+      - name: Step 4 - Get Surefire Reports Path
+        id: surefire-reports
+        run: |
+          echo "::set-output name=surefire-reports-path::$(find . -type d -name 'surefire-reports')"
 
-      - name: Step 4 - Upload test results
+      - name: Step 5 - Upload test results
         uses: actions/upload-artifact@v3
         with:
           name: test-results-libraryManager
-          path: libraryManager/target/surefire-reports
+          path: ${{ steps.surefire-reports.outputs.surefire-reports-path }}
+          
+      - name: Step 6 - Get JaCoCo Report Path
+        id: jacoco-report
+        run: |
+          echo "::set-output name=jacoco-report-path::$(find . -type f -name 'index.html' | grep 'target/site/jacoco/index.html')"
 
-      - name: Step 5 - Upload code coverage reports for libraryManager
+      - name: Step 7 - Upload code coverage reports
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-report-libraryManager
-          path: libraryManager/target/site/jacoco/index.html
+          path: ${{ steps.jacoco-report.outputs.jacoco-report-path }}
