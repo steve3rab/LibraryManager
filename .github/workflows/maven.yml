@@ -1,0 +1,42 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-test-libraryManager:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Step 1 - Checkout code
+        uses: actions/checkout@v3
+
+      - name: Step 2 - Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Step 3 - Run unit tests for libraryManager
+        working-directory: libraryManager
+        run: |
+          echo "Loading... Running unit tests for libraryManager"
+          mvn clean verify -Dtest=*IT
+
+      - name: Step 4 - Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results-libraryManager
+          path: libraryManager/target/surefire-reports
+
+      - name: Step 5 - Upload code coverage reports for libraryManager
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-report-libraryManager
+          path: libraryManager/target/site/jacoco/index.html
