@@ -32,10 +32,7 @@ jobs:
       - name: Step 4 - Get Surefire Reports Path
         id: surefire-reports
         run: |
-          surefire_reports_path=$(find . -type d -name 'surefire-reports')
-          echo "SUREFIRE_REPORTS_PATH=$surefire_reports_path" >> $GITHUB_ENV
-          echo "::set-output name=surefire-reports-path::$surefire_reports_path"
-          echo "SUREFIRE_REPORTS_PATH=$surefire_reports_path" >> $GITHUB_STATE/surefire-reports-path.env
+          echo "surefire-reports-path=$(find . -type d -name 'surefire-reports')" >> $GITHUB_OUTPUT
 
       - name: Step 5 - Upload test results
         uses: actions/upload-artifact@v3
@@ -46,10 +43,7 @@ jobs:
       - name: Step 6 - Get JaCoCo Report Path
         id: jacoco-report
         run: |
-          jacoco_report_path=$(find . -type f -name 'index.html' | grep 'target/site/jacoco/index.html')
-          echo "JACOCO_REPORT_PATH=$jacoco_report_path" >> $GITHUB_ENV
-          echo "::set-output name=jacoco-report-path::$jacoco_report_path"
-          echo "JACOCO_REPORT_PATH=$jacoco_report_path" >> $GITHUB_STATE/jacoco-report-path.env
+          echo "jacoco-report-path=$(find . -type f -name 'index.html' | grep 'target/site/jacoco/index.html')" >> $GITHUB_OUTPUT
 
       - name: Step 7 - Upload code coverage reports
         uses: actions/upload-artifact@v3
