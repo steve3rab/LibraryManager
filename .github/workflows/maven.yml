@@ -24,7 +24,7 @@ jobs:
           cache: maven
 
       - name: Step 3 - Run unit tests for libraryManager
-        working-directory: libraryManager
+        working-directory: .
         run: |
           echo "Loading... Running unit tests for libraryManager"
           mvn clean verify -Dtest=*IT
